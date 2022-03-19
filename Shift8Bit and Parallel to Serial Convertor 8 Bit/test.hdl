@@ -1,0 +1,10 @@
+CHIP test {
+  IN a;
+  OUT b;
+  PARTS:
+
+  Bit(x=a, load=true, out=value1);
+
+  DFF(x=a, out=c);
+  DFF(x=c, out=b);
+}

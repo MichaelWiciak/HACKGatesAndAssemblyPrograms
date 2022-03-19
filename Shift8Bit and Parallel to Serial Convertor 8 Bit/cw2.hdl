@@ -1,0 +1,62 @@
+CHIP cw2 {
+  IN indata[8], enable, load;
+  OUT sout, complete;
+  PARTS:
+
+  Bit(x=indata[0], load=load, out=value1);
+  Bit(x=indata[1], load=load, out=value2);
+  Bit(x=indata[2], load=load, out=value3);
+  Bit(x=indata[3], load=load, out=value4);
+  Bit(x=indata[4], load=load, out=value5);
+  Bit(x=indata[5], load=load, out=value6);
+  Bit(x=indata[6], load=load, out=value7);
+  Bit(x=indata[7], load=load, out=value8);
+
+  Mux(x=false, y=value1, sel=e1, out=v1);
+  Mux(x=false, y=value2, sel=e2, out=v2outFinal);
+  Mux(x=false, y=value3, sel=e3, out=v3outFinal);
+  Mux(x=false, y=value4, sel=e4, out=v4outFinal);
+  Mux(x=false, y=value5, sel=e5, out=v5outFinal);
+  Mux(x=false, y=value6, sel=e6, out=v6outFinal);
+  Mux(x=false, y=value7, sel=e7, out=v7outFinal);
+  Mux(x=false, y=value8, sel=finished, out=v8outFinal);
+
+
+  Or(x=v2outFinal, y=v3outFinal, out=v2orv3);
+  Or(x=v4outFinal, y=v5outFinal, out=v4orv5);
+  Or(x=v6outFinal, y=v7outFinal, out=v6orv7);
+  Or(x=v1, y=v8outFinal, out=v1orv8);
+
+  Or(x=v2orv3, y=v4orv5, out=v2v3v4v5or);
+  Or(x=v6orv7, y=v1orv8, out=v1v6v7v8or);
+
+  Or(x=v2v3v4v5or, y=v1v6v7v8or, out=sout);
+
+  DFF(x=eStart, out=e1);
+  DFF(x=e1, out=e2);
+  DFF(x=e2, out=e3);
+  DFF(x=e3, out=e4);
+  DFF(x=e4, out=e5);
+  DFF(x=e5, out=e6);
+  DFF(x=e6, out=e7);
+  DFF(x=e7, out=finished);
+  DFF(x=finished, out=BufferFinished);
+
+  And(x=finished, y=finished, out=complete);
+
+  Or(x=e6, y=e5, out=e65);
+  Or(x=e4, y=e3, out=e43);
+  Or(x=e2, y=e65, out=e652);
+  Or(x=e43, y=e652, out=e65432);
+  Or(x=e65432, y=e7, out=e765432);
+  Or(x=e765432, y=finished, out=e765432Finished);
+
+  Not(x=e765432Finished, out=Note65432);
+  And(x=Note65432, y=enable, out=e0);
+
+  Not(x=e1, out=Note1);
+  And(x= Note1, y=e0, out=eStart);
+
+
+
+}

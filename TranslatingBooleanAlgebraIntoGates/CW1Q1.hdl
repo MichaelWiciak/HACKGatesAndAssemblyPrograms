@@ -1,0 +1,29 @@
+CHIP CW1Q1 {
+  IN s1, s2, x, y;
+  OUT f;
+
+  PARTS:
+  And (x=s1, y=y, out=s1Andy);
+  And (x=s1, y=s2, out=s1Ands2);
+  Not (x=x, out=Notx);
+  And (x=s1Ands2, y=Notx, out=s1Ands2Notx);
+  Not (x=s2, out=Nots2);
+  And (x=s1, y=Nots2, out=s1AndNots2);
+  And (x=s1AndNots2, y=x, out=s1AndNots2Andx);
+  And (x=s2, y=Notx, out=s2AndNotx);
+  And (x=s2AndNotx, y=y, out=s2AndNotxAndy);
+  And (x=Nots2, y=x, out=Nots2Andx);
+  And (x=Nots2Andx, y=y, out=Nots2AndxAndy);
+  Not (x=s1, out=Nots1);
+  Not (x=y, out=Noty);
+  And (x=Nots1, y=s2, out=Nots1Ands2);
+  And (x=Nots1Ands2, y=x, out=Nots1Ands2Andx);
+  And (x=Nots1Ands2Andx, y=Noty, out=Nots1Ands2AndxNoty);
+  Or (x=s1Andy, y=s1Ands2Notx, out=s1AndyOrs1Ands2Notx);
+  Or (x=s1AndyOrs1Ands2Notx, y=s1AndNots2Andx, out=s1AndyOrs1Ands2NotxOrs1AndNots2Andx);
+  Or (x=s1AndyOrs1Ands2NotxOrs1AndNots2Andx, y=s2AndNotxAndy, out=s1AndyOrs1Ands2NotxOrs1AndNots2AndxOrs2AndNotxAndy);
+  Or (x=s1AndyOrs1Ands2NotxOrs1AndNots2AndxOrs2AndNotxAndy, y=Nots2AndxAndy, out=s1AndyOrs1Ands2NotxOrs1AndNots2AndxOrs2AndNotxAndyOrNots2AndxAndy);
+  Or (x=s1AndyOrs1Ands2NotxOrs1AndNots2AndxOrs2AndNotxAndyOrNots2AndxAndy, y=Nots1Ands2AndxNoty, out=f);
+
+
+}
